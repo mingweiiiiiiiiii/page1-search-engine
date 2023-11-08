@@ -1,13 +1,15 @@
 package com.example;
 
 /**
- * Hello world!
- *
+ * App class.
  */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
-    }
+public class App {
+  /**
+   * Main method.
+   *
+   * @param args arguments.
+   */
+  public static void main(String[] args) {
+    System.out.println("Hello World!");
+  }
 }

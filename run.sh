@@ -1,1 +1,1 @@
-(cd ./page1-search-engine && mvn package)
+(cd ./page1-search-engine && mvn clean install && java -jar ./target/page1-search-engine-1.0.jar)
