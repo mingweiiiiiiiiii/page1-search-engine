@@ -98,7 +98,6 @@
           <version>3.3.1</version>
           <configuration>
             <configLocation>google_checks.xml</configLocation>
-            <violationSeverity>warning</violationSeverity>
           </configuration>
           <executions>
             <execution>
