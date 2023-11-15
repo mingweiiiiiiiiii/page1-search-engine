@@ -39,7 +39,7 @@ public class FederalRegisterDocument {
 
   /** 
    * Constructor for Federal Register (FR) document.
-   * 
+   *
    * @param number document number.
    * @param parent document parent.
    * @param text document text.
