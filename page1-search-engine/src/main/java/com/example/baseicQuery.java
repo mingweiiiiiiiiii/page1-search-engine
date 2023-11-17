@@ -24,6 +24,9 @@ public class baseicQuery {
 
 
     QueryParser qp = new QueryParser("content", new StandardAnalyzer());
+
+
+
     for (int i = 0; i < myQueryList.size(); i++) {
       String querytempDescription = myQueryList.get(i).trim();
 

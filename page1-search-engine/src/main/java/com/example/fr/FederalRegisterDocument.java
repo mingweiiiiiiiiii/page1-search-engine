@@ -9,6 +9,98 @@ import org.apache.lucene.document.TextField;
  * Financial Register (FR) document.
  */
 public class FederalRegisterDocument {
+  public String getNumber() {
+    return number;
+  }
+
+  public String getParent() {
+    return parent;
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public String getUsDept() {
+    return usDept;
+  }
+
+  public String getAgency() {
+    return agency;
+  }
+
+  public String getUsBureau() {
+    return usBureau;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public String getAddress() {
+    return address;
+  }
+
+  public String getFurther() {
+    return further;
+  }
+
+  public String getSummary() {
+    return summary;
+  }
+
+  public String getAction() {
+    return action;
+  }
+
+  public String getSigner() {
+    return signer;
+  }
+
+  public String getSignJob() {
+    return signJob;
+  }
+
+  public String getSupplem() {
+    return supplem;
+  }
+
+  public String getBilling() {
+    return billing;
+  }
+
+  public String getFrFiling() {
+    return frFiling;
+  }
+
+  public String getDate() {
+    return date;
+  }
+
+  public String getCfrNo() {
+    return cfrNo;
+  }
+
+  public String getRindock() {
+    return rindock;
+  }
+
+  public String getTable() {
+    return table;
+  }
+
+  public String getFootNote() {
+    return footNote;
+  }
+
+  public String getFootCite() {
+    return footCite;
+  }
+
+  public String getFootName() {
+    return footName;
+  }
+
   private final String number;
   private final String parent;
   private final String text;
