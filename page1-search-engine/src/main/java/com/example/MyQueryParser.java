@@ -11,13 +11,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
-public class QueryParser {
+public class MyQueryParser {
 
-    public QueryParser(String content, StandardAnalyzer standardAnalyzer) {
+    public MyQueryParser(String content, StandardAnalyzer standardAnalyzer) {
     }
 
-    public Query parse(String querytempDescription) {
-    }
 
     private enum Tags {
         BEGIN("<top>"),
