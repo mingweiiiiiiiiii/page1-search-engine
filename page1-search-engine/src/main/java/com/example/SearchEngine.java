@@ -1,6 +1,7 @@
 package com.example;
 
 import com.example.indexing.indexingConstrution;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -8,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -17,6 +21,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import java.nio.file.Paths;
@@ -60,18 +65,39 @@ public class SearchEngine {
    // LosAngelesTimesReader.readDocuments(LATIMES_PATH);
    // FederalRegisterReader.readDocuments(FR_PATH);
     // NEXT step create query
-    System.out.println("Finishing indexing ");
+    System.out.println("Finishing loading ");
+
+// DELETE write lock file
+    String directoryPath = "./dir";
+    String fileName = "write.lock";
+
+    File lockFile = new File(directoryPath, fileName);
+
+    if (lockFile.exists()) {
+      boolean isDeleted = lockFile.delete();
+      if (isDeleted) {
+        System.out.println(fileName + " has been successfully deleted.");
+      } else {
+        System.out.println("Could not delete " + fileName + ". Please check file permissions.");
+      }
+    } else {
+      System.out.println(fileName + " does not exist in the directory " + directoryPath);
+    }
 
 
-    Path myindexPath = Paths.get(DIRTORY_ADDRESS);
-    Directory indexDir = FSDirectory.open(myindexPath);
-    Directory mydircotry = FSDirectory.open(myindexPath);
-    DirectoryReader mydirReader = DirectoryReader.open(mydircotry);
-    IndexSearcher searcher = new IndexSearcher(mydirReader);
+// Bug at searching
+    System.out.println("Start searching");
+    Directory dirr = FSDirectory.open(Paths.get(DIRTORY_ADDRESS));
+    DirectoryReader dirReader = DirectoryReader.open(dirr);
+    IndexSearcher searcher = new IndexSearcher(dirReader);
+    searcher.setSimilarity(new BM25Similarity());
+
+
+
     //  FINISHING SEARCH CONFIG
 
 
-    searcher.setSimilarity(new BM25Similarity());
+
     System.out.println("Current simialrity  is BM25");
 
     // Read query
@@ -95,7 +121,6 @@ public class SearchEngine {
 
     parser_single_mutiple.setAllowLeadingWildcard(true);
 
-    List<String> results = new ArrayList<>();
     int initlisedTopicNumber = 400;
 
     String analyzerTag = "st";
@@ -118,7 +143,7 @@ public class SearchEngine {
 
         String searchDOCNO = searcher.doc(hit.doc).get(DOC_NUMBE_MARCO);
         // query-id Q0 document-id rank score STANDARD
-        initlisedTopicNumber++;
+
         int rank = j + 1;
        // query-id Q0 document-id rank score STANDARD
         String formatOutput = initlisedTopicNumber + " Q0 " +searchDOCNO + " " + rank + " " + hit.score + " STANDARD";
@@ -126,7 +151,7 @@ public class SearchEngine {
         fileWriter.write(formatOutput + System.lineSeparator());
       }
 
-
+      initlisedTopicNumber++;
     }
 
     fileWriter.close();
