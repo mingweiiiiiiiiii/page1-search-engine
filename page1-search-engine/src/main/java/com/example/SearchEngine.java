@@ -138,6 +138,11 @@ public class SearchEngine {
 
       final String DOC_NUMBE_MARCO = "docno";
       int RankLable = 1;
+
+      if(RankLable%100 ==0)
+      {
+        RankLable = 1;
+      }
       for (int j = 0; j < mydocHit.length; j ++ ) {
         ScoreDoc hit = mydocHit[j];
 
