@@ -137,17 +137,18 @@ public class SearchEngine {
       ScoreDoc[] mydocHit =topDocs.scoreDocs;
 
       final String DOC_NUMBE_MARCO = "docno";
-
+      int RankLable = 1;
       for (int j = 0; j < mydocHit.length; j ++ ) {
         ScoreDoc hit = mydocHit[j];
 
         String searchDOCNO = searcher.doc(hit.doc).get(DOC_NUMBE_MARCO);
         // query-id Q0 document-id rank score STANDARD
 
-        int rank = j + 1;
+        
        // query-id Q0 document-id rank score STANDARD
-        String formatOutput = initlisedTopicNumber + " Q0 " +searchDOCNO + " " + rank + " " + hit.score + " STANDARD";
+        String formatOutput = initlisedTopicNumber + " Q0 " +searchDOCNO + " " + RankLable + " " + hit.score + " STANDARD";
         System.out.println(formatOutput);
+        RankLable++;
         fileWriter.write(formatOutput + System.lineSeparator());
       }
 
