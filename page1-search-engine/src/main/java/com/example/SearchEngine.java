@@ -121,7 +121,7 @@ public class SearchEngine {
 
     parser_single_mutiple.setAllowLeadingWildcard(true);
 
-    int initlisedTopicNumber = 400;
+    int initlisedTopicNumber = 401;
 
     String analyzerTag = "st";
     String simialirtyMatchingAlgorithmTag = "bm25";
