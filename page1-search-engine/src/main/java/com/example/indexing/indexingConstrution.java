@@ -33,7 +33,11 @@ import org.apache.lucene.store.FSDirectory;
 public class indexingConstrution {
 
 
-  ArrayList<Document> LuenceAllDocuemnt;
+  public ArrayList<Document> getLuenceAllDocuemnt() {
+    return LuenceAllDocuemnt;
+  }
+
+  private  ArrayList<Document> LuenceAllDocuemnt;
 
   public indexingConstrution() throws IOException {
     this.LuenceAllDocuemnt = new ArrayList<>();
@@ -138,6 +142,9 @@ public class indexingConstrution {
     System.out.println("Starting indexing ");
     Analyzer mAnalyzer = new StandardAnalyzer();
     IndexWriterConfig myWriterconfig = new IndexWriterConfig(mAnalyzer);
+
+    myWriterconfig.setMaxBufferedDocs(100000);
+
     myWriterconfig.setSimilarity(new BM25Similarity());
 
     Path myindexPath = Paths.get(DIRTORY_ADDRESS);
@@ -146,10 +153,14 @@ public class indexingConstrution {
     myWriterconfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
     IndexWriter indexWriter = new IndexWriter(indexDir, myWriterconfig);
     // add document to the index
+    indexWriter.forceMerge(100000);
     indexWriter.addDocuments(this.LuenceAllDocuemnt);
 
-    System.out.println("Finishing indexing ");
 
+    indexWriter.close();
+    System.out.println("Finishing indexing  hhh");
+
+    /*
     float weightForTittle = 0.2f;
 
     float weightForDescr = 1.1f;
@@ -163,6 +174,8 @@ public class indexingConstrution {
 
     parser_single_mutiple.setAllowLeadingWildcard(true);
     System.out.println("We select  all two title TITLE  conetne");
+
+     */
 
   }
 }
