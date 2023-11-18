@@ -12,6 +12,39 @@ public class FinancialTimesDocument {
   private final String number;
   private final String profile;
   private final String date;
+
+  public String getNumber() {
+    return number;
+  }
+
+  public String getProfile() {
+    return profile;
+  }
+
+  public String getDate() {
+    return date;
+  }
+
+  public String getHeadline() {
+    return headline;
+  }
+
+  public String getByline() {
+    return byline;
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public String getPublisher() {
+    return publisher;
+  }
+
+  public String getPage() {
+    return page;
+  }
+
   private final String headline;
   private final String byline;
   private final String text;

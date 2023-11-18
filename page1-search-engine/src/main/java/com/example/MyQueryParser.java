@@ -9,8 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
-public class QueryParser {
+public class MyQueryParser {
+
+    public MyQueryParser(String content, StandardAnalyzer standardAnalyzer) {
+    }
+
 
     private enum Tags {
         BEGIN("<top>"),

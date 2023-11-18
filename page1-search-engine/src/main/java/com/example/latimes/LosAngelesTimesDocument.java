@@ -10,6 +10,47 @@ import org.apache.lucene.document.TextField;
  */
 public class LosAngelesTimesDocument {
   private final String number;
+
+  public String getNumber() {
+    return number;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public String getDate() {
+    return date;
+  }
+
+  public String getSection() {
+    return section;
+  }
+
+  public String getLength() {
+    return length;
+  }
+
+  public String getHeadline() {
+    return headline;
+  }
+
+  public String getByline() {
+    return byline;
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public String getGraphic() {
+    return graphic;
+  }
+
+  public String getType() {
+    return type;
+  }
+
   private final String id;
   private final String date;
   private final String section;
