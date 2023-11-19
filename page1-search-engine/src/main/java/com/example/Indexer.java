@@ -1,4 +1,4 @@
-package com.example.indexing;
+package com.example;
 
 import com.example.fbisparser.Fbis95Structure;
 import com.example.fbisparser.Fbis96Parser;

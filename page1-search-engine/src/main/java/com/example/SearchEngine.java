@@ -1,6 +1,6 @@
 package com.example;
 
-import com.example.indexing.Indexer;
+import com.example.Indexer;
 import java.io.File;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.search.similarities.BM25Similarity;
