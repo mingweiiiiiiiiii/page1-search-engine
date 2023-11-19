@@ -1,6 +1,6 @@
 package com.example;
 
-import com.example.indexing.indexingConstrution;
+import com.example.indexing.Indexer;
 import java.io.File;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.search.similarities.BM25Similarity;
@@ -15,7 +15,7 @@ public class SearchEngine {
   public static void main(String[] args) throws Exception {
     System.out.println("Reading corpora and indexing with StandardAnalyzer and " 
         + "BM25 scoring method...");
-    indexingConstrution myIndexCreation =  new indexingConstrution();
+    Indexer myIndexCreation =  new Indexer();
     System.out.println("Finishing creating index.");
 
     // DELETE write lock file.

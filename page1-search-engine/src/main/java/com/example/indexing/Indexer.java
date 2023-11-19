@@ -24,7 +24,7 @@ import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-public class indexingConstrution {
+public class Indexer {
   public static final String FT_PATH = "./data/ft";
   public static final String LATIMES_PATH = "./data/latimes";
   public static final String FR_PATH = "./data/fr94";
@@ -36,7 +36,7 @@ public class indexingConstrution {
 
   private ArrayList<Document> allLuceneDocuments;
 
-  public indexingConstrution() throws IOException {
+  public Indexer() throws IOException {
     this.allLuceneDocuments = new ArrayList<>();
     this.createDocumentSameFieldForAllCorpus();
     this.constructIndex();
