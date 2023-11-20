@@ -1,6 +1,6 @@
 package com.example;
 
-public class MyQuery {
+public class Topic {
 
     private String number; // This corresponds to the <num> tag in the dataset
     private String title; // This corresponds to the <title> tag in the dataset
@@ -8,7 +8,7 @@ public class MyQuery {
     private String narrative; // This corresponds to the <narr> tag in the dataset
 
     // Constructor without parameters
-    public MyQuery() {
+    public Topic() {
         // No fields to initialize, default constructor is sufficient
     }
 
