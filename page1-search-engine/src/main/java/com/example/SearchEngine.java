@@ -22,9 +22,8 @@ public class SearchEngine {
     indexer.indexDocuments(INDEX_DIRECTORY, analyzer, scorer);
 
     // DELETE write lock file.
-    String directoryPath = "./dir";
     String fileName = "write.lock";
-    File lockFile = new File(directoryPath, fileName);
+    File lockFile = new File(INDEX_DIRECTORY, fileName);
     if (lockFile.exists()) {
       boolean isDeleted = lockFile.delete();
       if (isDeleted) {
@@ -33,11 +32,11 @@ public class SearchEngine {
         System.out.println("Could not delete " + fileName + ". Please check file permissions.");
       }
     } else {
-      System.out.println(fileName + " does not exist in the directory " + directoryPath);
+      System.out.println(fileName + " does not exist in the directory " + INDEX_DIRECTORY);
     }
 
     System.out.println("Start searching...");
     Querier querier = new Querier("./topics/topics.txt");
-    querier.queryDocuments(analyzer, scorer);
+    querier.queryDocuments(INDEX_DIRECTORY, analyzer, scorer);
   }
 }

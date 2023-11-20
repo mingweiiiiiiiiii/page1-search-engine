@@ -26,7 +26,6 @@ import org.apache.lucene.store.FSDirectory;
 import com.example.queryCreation.ProcessingFromTopicParser;
 
 public class Querier {
-  public static final String INDEX_DIR = "./dir";
   public static final int TOP_DOCS_LIMIT = 1000;
 
   private static final String TITLE  = "title";
@@ -47,11 +46,12 @@ public class Querier {
 
   /**
    * Queries the documents with the given analyzer and scorer.
+   * @param indexDirectory Path to the index directory.
    * @param analyzer Analyzer to use for querying.
    * @param scorer Similarity to use for querying.
    * @throws Exception exception.
    */
-  public void queryDocuments(Analyzer analyzer, Similarity scorer) throws Exception {
+  public void queryDocuments(String indexDirectory, Analyzer analyzer, Similarity scorer) throws Exception {
     String analyzerName = analyzer.getClass().getName()
             .substring(analyzer.getClass().getName().lastIndexOf('.') + 1);
     String scorerName = scorer.getClass().getName()
@@ -60,7 +60,7 @@ public class Querier {
     FileOutputStream fos = new FileOutputStream(fout);
     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
 
-    IndexSearcher searcher = createIndexSearcher(scorer);
+    IndexSearcher searcher = createIndexSearcher(indexDirectory, scorer);
 
     // Search index with all queries and write results to file.
     int queryID = 401;
@@ -88,9 +88,9 @@ public class Querier {
    * @param scorer Similarity to use for querying.
    * @throws IOException input-otput exception.
    */
-  private static IndexSearcher createIndexSearcher(Similarity scorer) throws IOException {
+  private static IndexSearcher createIndexSearcher(String indexDirectory, Similarity scorer) throws IOException {
     // Use file system directory to retrieve index.
-    Directory dir = FSDirectory.open(Paths.get(INDEX_DIR));
+    Directory dir = FSDirectory.open(Paths.get(indexDirectory));
     IndexReader reader = DirectoryReader.open(dir);
     IndexSearcher searcher = new IndexSearcher(reader);
     // Configure index searcher with scorer.
