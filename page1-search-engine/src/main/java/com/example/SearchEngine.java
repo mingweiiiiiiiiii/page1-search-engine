@@ -1,22 +1,25 @@
 package com.example;
 
-import com.example.Indexer;
 import java.io.File;
+
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.Similarity;
 
 /**
  * SearchEngine indexes and searches documents.
  */
 public class SearchEngine {
+  private static final String INDEX_DIRECTORY = "./dir";
   /**
    * Main method for SearchEngine.
    */
   public static void main(String[] args) throws Exception {
-    System.out.println("Reading corpora and indexing with StandardAnalyzer and " 
-        + "BM25 scoring method...");
-    Indexer myIndexCreation =  new Indexer();
-    System.out.println("Finishing creating index.");
+    Analyzer analyzer = new StandardAnalyzer();
+    Similarity scorer = new BM25Similarity();
+    Indexer indexer = new Indexer();
+    indexer.indexDocuments(INDEX_DIRECTORY, analyzer, scorer);
 
     // DELETE write lock file.
     String directoryPath = "./dir";
@@ -35,6 +38,6 @@ public class SearchEngine {
 
     System.out.println("Start searching...");
     Querier querier = new Querier("./topics/topics.txt");
-    querier.queryDocuments(new StandardAnalyzer(), new BM25Similarity());
+    querier.queryDocuments(analyzer, scorer);
   }
 }

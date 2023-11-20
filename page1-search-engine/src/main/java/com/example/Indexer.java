@@ -9,26 +9,22 @@ import com.example.ft.FinancialTimesReader;
 import com.example.latimes.LosAngelesTimesDocument;
 import com.example.latimes.LosAngelesTimesReader;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.search.similarities.BM25Similarity;
-import org.apache.lucene.store.Directory;
+import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.FSDirectory;
 
 public class Indexer {
   public static final String FT_PATH = "./data/ft";
   public static final String LATIMES_PATH = "./data/latimes";
   public static final String FR_PATH = "./data/fr94";
-  public static final String DIRTORY_ADDRESS = "./dir";
 
   private final String DOC_NO = "docno";
   private final String TITLE = "title";
@@ -38,12 +34,7 @@ public class Indexer {
 
   public Indexer() throws IOException {
     this.allLuceneDocuments = new ArrayList<>();
-    this.createDocumentSameFieldForAllCorpus();
-    this.constructIndex();
-  }
-
-  public void createDocumentSameFieldForAllCorpus() throws IOException {
-    // FBIS.
+     // FBIS.
     Fbis96Parser myFbisParser = new Fbis96Parser();
     myFbisParser.loadFiles();
     ArrayList<Fbis95Structure> fbisDocuments = myFbisParser.getMyFbisContainer();
@@ -83,27 +74,35 @@ public class Indexer {
     }
   }
 
-  public void constructIndex() throws IOException {
-    System.out.println("Starting indexing ");
-    Analyzer mAnalyzer = new StandardAnalyzer();
-    IndexWriterConfig myWriterconfig = new IndexWriterConfig(mAnalyzer);
-    myWriterconfig.setMaxBufferedDocs(100000);
-    myWriterconfig.setSimilarity(new BM25Similarity());
-
-    Path myindexPath = Paths.get(DIRTORY_ADDRESS);
-    Directory indexDir = FSDirectory.open(myindexPath);
-    // Overwrite seveearl times
-    myWriterconfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
-    IndexWriter indexWriter = new IndexWriter(indexDir, myWriterconfig);
-    // add document to the index
+  public void indexDocuments(String indexDirectory, Analyzer analyzer, Similarity scorer) throws IOException {
+    IndexWriter indexWriter = createWriter(indexDirectory, analyzer, scorer);
     indexWriter.forceMerge(100000);
     indexWriter.addDocuments(this.allLuceneDocuments);
     indexWriter.close();
-    indexDir.close();
-    System.out.println("Finishing indexing.");
+
+    String analyzerName = analyzer.getClass().getName()
+            .substring(analyzer.getClass().getName().lastIndexOf('.') + 1);
+    String scorerName = scorer.getClass().getName()
+            .substring(scorer.getClass().getName().lastIndexOf('.') + 1);
+    System.out.println("Indexed documents with " + analyzerName + " and " + scorerName
+    + ".");
   }
 
-  public ArrayList<Document> getAllLuceneDocuments() {
-    return allLuceneDocuments;
+   /**
+   * Creates an IndexWriter with the given analyzer and scorer.
+   *
+   * @param analyzer Analyzer to use for indexing.
+   * @param scorer Similarity to use for indexing.
+   * @return IndexWriter object.
+   */
+  private static IndexWriter createWriter(String indexDirectory, Analyzer analyzer, 
+      Similarity similarity) throws IOException {
+    IndexWriterConfig config = new IndexWriterConfig(analyzer);
+    config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+    config.setMaxBufferedDocs(100000);
+    config.setSimilarity(similarity);
+    FSDirectory dir = FSDirectory.open(Paths.get(indexDirectory));
+    IndexWriter writer = new IndexWriter(dir, config);
+    return writer;
   }
 }
