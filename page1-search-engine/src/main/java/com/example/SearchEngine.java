@@ -35,8 +35,7 @@ public class SearchEngine {
       System.out.println(fileName + " does not exist in the directory " + INDEX_DIRECTORY);
     }
 
-    System.out.println("Start searching...");
     Querier querier = new Querier("./topics/topics.txt");
-    querier.queryDocuments(INDEX_DIRECTORY, analyzer, scorer);
+    querier.queryIndex(INDEX_DIRECTORY, analyzer, scorer);
   }
 }

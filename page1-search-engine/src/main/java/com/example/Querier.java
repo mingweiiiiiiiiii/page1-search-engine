@@ -51,7 +51,8 @@ public class Querier {
    * @param scorer Similarity to use for querying.
    * @throws Exception exception.
    */
-  public void queryDocuments(String indexDirectory, Analyzer analyzer, Similarity scorer) throws Exception {
+  public void queryIndex(String indexDirectory, Analyzer analyzer, Similarity scorer) throws Exception {
+    System.out.println("Querying index at '" + indexDirectory + "'...");
     String analyzerName = analyzer.getClass().getName()
             .substring(analyzer.getClass().getName().lastIndexOf('.') + 1);
     String scorerName = scorer.getClass().getName()
@@ -80,7 +81,7 @@ public class Querier {
       queryID++;
     }
     bw.close();
-    System.out.println("Queried documents with " + analyzerName + " and " + scorerName + ".");
+    System.out.println("Queried index with " + analyzerName + " and " + scorerName + " results saved to '"  + fout.getPath() + "'.");
   }
 
   /**

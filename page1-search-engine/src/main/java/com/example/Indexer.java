@@ -75,6 +75,7 @@ public class Indexer {
   }
 
   public void indexDocuments(String indexDirectory, Analyzer analyzer, Similarity scorer) throws IOException {
+    System.out.println("Indexing documents...");
     IndexWriter indexWriter = createWriter(indexDirectory, analyzer, scorer);
     indexWriter.forceMerge(100000);
     indexWriter.addDocuments(this.allLuceneDocuments);
@@ -85,7 +86,7 @@ public class Indexer {
     String scorerName = scorer.getClass().getName()
             .substring(scorer.getClass().getName().lastIndexOf('.') + 1);
     System.out.println("Indexed documents with " + analyzerName + " and " + scorerName
-    + ".");
+    + " and stored to directory " + indexDirectory + ".");
   }
 
    /**
