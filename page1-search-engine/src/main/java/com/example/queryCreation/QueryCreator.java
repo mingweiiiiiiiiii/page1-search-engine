@@ -40,14 +40,14 @@ Offline: check out the folder: "./data/queryfile/query.txt";
 ProcessingFromTopicParser myProcess  = new ProcessingFromTopicParser()
 Online receive the input ArrayList<String> my = myProcess.getQueryList();
  */
-public class ProcessingFromTopicParser {
+public class QueryCreator {
 	public ArrayList<String> getQueryList() {
 		return queryList;
 	}
 
 	private ArrayList<String>queryList ;
 
-	public ProcessingFromTopicParser() {
+	public QueryCreator() {
 
 		this.run();
 	}

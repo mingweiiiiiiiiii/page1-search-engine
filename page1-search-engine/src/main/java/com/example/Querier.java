@@ -23,7 +23,7 @@ import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-import com.example.queryCreation.ProcessingFromTopicParser;
+import com.example.queryCreation.QueryCreator;
 
 public class Querier {
   public static final int TOP_DOCS_LIMIT = 1000;
@@ -39,7 +39,7 @@ public class Querier {
    */
   public Querier(String pathToQueries) {
     // Read queries from topics.
-    ProcessingFromTopicParser myqueryGeneration = new ProcessingFromTopicParser();
+    QueryCreator myqueryGeneration = new QueryCreator();
     myqueryGeneration.run();
     this.queries = myqueryGeneration.getQueryList();
   }
