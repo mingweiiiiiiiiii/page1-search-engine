@@ -28,6 +28,7 @@ import com.example.queryCreation.QueryCreator;
 public class Querier {
   public static final int TOP_DOCS_LIMIT = 1000;
 
+  private static final String DOC_NO = "docno";
   private static final String TITLE  = "title";
   private static final String CONTENT  = "content";
 
@@ -73,7 +74,7 @@ public class Querier {
       for (ScoreDoc sd : results.scoreDocs) {
         // Output in trec_eval format - see http://www.rafaelglater.com/en/post/learn-how-to-use-trec_eval-to-evaluate-your-information-retrieval-system.
         // Format: query-id Q0 document-id rank score STANDARD
-        queryResults += queryID + " Q0 " + (sd.doc + 1) + " " 
+        queryResults += queryID + " Q0 " + (searcher.doc(sd.doc).get(DOC_NO)) + " " 
           + rank + " " + sd.score + " " + analyzerName + "-" + scorerName + "\n";
         rank++;
       }
