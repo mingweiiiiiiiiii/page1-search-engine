@@ -42,3 +42,6 @@ buildNumber.properties
 
 # trec_eval binary
 trec_eval
+
+# Java heap dumps.
+java_pid*
