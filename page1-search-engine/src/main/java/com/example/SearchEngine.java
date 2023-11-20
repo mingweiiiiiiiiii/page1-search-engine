@@ -11,7 +11,7 @@ import org.apache.lucene.search.similarities.Similarity;
  * SearchEngine indexes and searches documents.
  */
 public class SearchEngine {
-  private static final String INDEX_DIRECTORY = "./dir";
+  private static final String INDEX_DIRECTORY = "./index";
   /**
    * Main method for SearchEngine.
    */
