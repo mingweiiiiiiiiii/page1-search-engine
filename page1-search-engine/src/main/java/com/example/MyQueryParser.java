@@ -36,7 +36,7 @@ public class MyQueryParser {
         }
     }
 
-    private final static Path DATA_PATH = Paths.get("topics.txt");
+    private final static Path DATA_PATH = Paths.get("./data/queryCreationdataset/topics.txt");
 
     public List<MyQuery> parseQueries() {
         List<MyQuery> queries = new ArrayList<>();

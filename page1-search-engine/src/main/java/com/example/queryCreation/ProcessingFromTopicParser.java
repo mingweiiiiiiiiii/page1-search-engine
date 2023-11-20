@@ -1,4 +1,7 @@
 package com.example.queryCreation;
+
+import com.example.MyQuery;
+import com.example.MyQueryParser;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -172,12 +175,12 @@ public class ProcessingFromTopicParser {
 
 
 	public void run() {
-		QueryParser my = new QueryParser();
+		MyQueryParser my = new MyQueryParser("", null);
 
-		List<Query> local = my.parseQueries();
+		List<MyQuery> local = my.parseQueries();
 		ArrayList<String> OutputList = new ArrayList<>();
 		for (int indexQuery = 0; indexQuery < local.size(); indexQuery++) {
-			Query temp = local.get(indexQuery);
+			MyQuery temp = local.get(indexQuery);
 			String title = temp.getTitle();
 			String nattive = temp.getNarrative();
 			String desc = temp.getDescription();
