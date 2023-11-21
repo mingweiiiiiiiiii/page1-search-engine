@@ -10,13 +10,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 /*
-@Author :Mingwei Shi
+@Author: Mingwei Shi
 
 This class is to receive the content from the topic parser and then remove the stop words and punctuation, followed by tokenizing the
 word
@@ -27,13 +24,8 @@ Then, use the set operation to make the value unique.
 
 Each tf-idf score might contain several terms; select all of them.
 
-
 TOP 15 TF-IDF SCORE
 Then, repeat the set operation to select unique keyword terms for each query's final keyword collection.
-
- */
-
-/*
 
 You could generate the query online or offline
 Offline: check out the folder: "./data/queryfile/query.txt";
@@ -45,7 +37,7 @@ public class QueryCreator {
 		return queryList;
 	}
 
-	private ArrayList<String>queryList ;
+	private ArrayList<String> queryList;
 
 	public QueryCreator() {
 
@@ -53,7 +45,7 @@ public class QueryCreator {
 	}
 
 	public String[] stringRemovalNoiseAndToken(String inputString) {
-		final String LARGE_STOPWORD_ADDRESS_173STOPWORDS = "./data/queryCreationdataset/173Stopwords.txt";
+		final String LARGE_STOPWORD_ADDRESS_173STOPWORDS = "./data/queries/173Stopwords.txt";
 
 		// Stopwords list
 		// https://gist.github.com/larsyencken/1440509
@@ -177,7 +169,7 @@ public class QueryCreator {
 	public void run() {
 		TopicParser my = new TopicParser();
 
-		List<Topic> local = my.parseQueries();
+		List<Topic> local = my.getTopics();
 		ArrayList<String> OutputList = new ArrayList<>();
 		for (int indexQuery = 0; indexQuery < local.size(); indexQuery++) {
 			Topic temp = local.get(indexQuery);
@@ -265,7 +257,7 @@ public class QueryCreator {
 		}
 		this.queryList= new ArrayList<>(OutputList);
 
-		String filePath = "./data/queryfile/query.txt";
+		String filePath = "./data/queries/queries.txt";
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
 			for (String line : OutputList) {
 				writer.write(line);

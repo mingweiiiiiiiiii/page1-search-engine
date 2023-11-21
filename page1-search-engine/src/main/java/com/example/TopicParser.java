@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
 public class TopicParser {
-
-
+    /**
+     * Enum for the tags in the topics file.
+     */
     private enum Tags {
         BEGIN("<top>"),
         END("</top>"),
@@ -33,11 +33,12 @@ public class TopicParser {
         }
     }
 
-    private final static Path DATA_PATH = Paths.get("./data/queryCreationdataset/topics.txt");
+    private final static Path TOPICS_PATH = Paths.get("./data/queries/topics.txt");
+    private List<Topic> topics;
 
-    public List<Topic> parseQueries() {
+    public TopicParser() {
         List<Topic> queries = new ArrayList<>();
-        Path filePath = DATA_PATH;
+        Path filePath = TOPICS_PATH;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath.toFile()))) {
             Topic currentQuery = null; // Start with null to indicate no active query
@@ -46,7 +47,6 @@ public class TopicParser {
 
             while ((line = reader.readLine()) != null) {
                 Tags foundTag = findTag(line);
-
                 if (foundTag != null) {
                     if (foundTag == Tags.BEGIN) {
                         // Handle previous query object if it exists.
@@ -58,7 +58,7 @@ public class TopicParser {
                     } else {
                         // If the current tag is NUMBER or TITLE, we should fill the fields right away.
                         if (foundTag == Tags.NUMBER || foundTag == Tags.TITLE) {
-                            fillQueryFields(foundTag, line, currentQuery);
+                            fillTopicFields(foundTag, line, currentQuery);
                         }
                         // Set the current tag for DESCRIPTION and NARRATIVE, which span multiple lines.
                         currentTag = foundTag;
@@ -66,7 +66,7 @@ public class TopicParser {
                 } else {
                     // Continue adding content for multiline fields (DESCRIPTION, NARRATIVE).
                     if (currentTag != null && currentQuery != null) {
-                        fillQueryFields(currentTag, line, currentQuery);
+                        fillTopicFields(currentTag, line, currentQuery);
                     }
                 }
 
@@ -84,7 +84,7 @@ public class TopicParser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return queries;
+        this.topics = queries;
     }
 
     private Tags findTag(String line) {
@@ -98,7 +98,14 @@ public class TopicParser {
 
     private static final Pattern TITLE_PATTERN = Pattern.compile("<title>(.*?)$");
 
-    private void fillQueryFields(Tags tag, String line, Topic query) {
+    /**
+     * Fills the topic fields based on the tag.
+     *
+     * @param tag   the tag to fill.
+     * @param line  the line to fill the tag with.
+     * @param query the topic to fill.
+     */
+    private void fillTopicFields(Tags tag, String line, Topic query) {
         // No need for a check; the tag presence is already determined before this method is called.
         String content;
         switch (tag) {
@@ -127,4 +134,12 @@ public class TopicParser {
         }
     }
 
+    /**
+     * Returns the list of topics.
+     *
+     * @return the list of topics.
+     */
+    public List<Topic> getTopics() {
+        return this.topics;
+    }
 }
