@@ -45,3 +45,6 @@ trec_eval
 
 # Java heap dumps.
 java_pid*
+
+# Index directory.
+index/
