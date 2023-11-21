@@ -1,4 +1,7 @@
 package com.example.queryCreation;
+
+import com.example.Topic;
+import com.example.TopicParser;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -37,14 +40,14 @@ Offline: check out the folder: "./data/queryfile/query.txt";
 ProcessingFromTopicParser myProcess  = new ProcessingFromTopicParser()
 Online receive the input ArrayList<String> my = myProcess.getQueryList();
  */
-public class ProcessingFromTopicParser {
+public class QueryCreator {
 	public ArrayList<String> getQueryList() {
 		return queryList;
 	}
 
 	private ArrayList<String>queryList ;
 
-	public ProcessingFromTopicParser() {
+	public QueryCreator() {
 
 		this.run();
 	}
@@ -172,12 +175,12 @@ public class ProcessingFromTopicParser {
 
 
 	public void run() {
-		QueryParser my = new QueryParser();
+		TopicParser my = new TopicParser();
 
-		List<Query> local = my.parseQueries();
+		List<Topic> local = my.parseQueries();
 		ArrayList<String> OutputList = new ArrayList<>();
 		for (int indexQuery = 0; indexQuery < local.size(); indexQuery++) {
-			Query temp = local.get(indexQuery);
+			Topic temp = local.get(indexQuery);
 			String title = temp.getTitle();
 			String nattive = temp.getNarrative();
 			String desc = temp.getDescription();

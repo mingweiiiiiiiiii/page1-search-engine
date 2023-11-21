@@ -1,4 +1,4 @@
-package com.example.queryCreation;
+package com.example;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
-public class QueryParser {
+public class TopicParser {
+
 
     private enum Tags {
         BEGIN("<top>"),
@@ -33,12 +35,12 @@ public class QueryParser {
 
     private final static Path DATA_PATH = Paths.get("./data/queryCreationdataset/topics.txt");
 
-    public List<Query> parseQueries() {
-        List<Query> queries = new ArrayList<>();
+    public List<Topic> parseQueries() {
+        List<Topic> queries = new ArrayList<>();
         Path filePath = DATA_PATH;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath.toFile()))) {
-            Query currentQuery = null; // Start with null to indicate no active query
+            Topic currentQuery = null; // Start with null to indicate no active query
             String line;
             Tags currentTag = null;
 
@@ -52,7 +54,7 @@ public class QueryParser {
                             queries.add(currentQuery);
                         }
                         // Create a new Query object for the next query block.
-                        currentQuery = new Query();
+                        currentQuery = new Topic();
                     } else {
                         // If the current tag is NUMBER or TITLE, we should fill the fields right away.
                         if (foundTag == Tags.NUMBER || foundTag == Tags.TITLE) {
@@ -96,7 +98,7 @@ public class QueryParser {
 
     private static final Pattern TITLE_PATTERN = Pattern.compile("<title>(.*?)$");
 
-    private void fillQueryFields(Tags tag, String line, Query query) {
+    private void fillQueryFields(Tags tag, String line, Topic query) {
         // No need for a check; the tag presence is already determined before this method is called.
         String content;
         switch (tag) {
