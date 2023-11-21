@@ -1,8 +1,14 @@
 #!/bin/sh
 
 # Run search engine.
+# If you are running into problems with JVM heap memory, try to increase the heap size.
+# From testing, ~4GB heap size is needed to run the search engine on the entire dataset.
+# To see the heap size, run the following command:
+#  $ java -XX:+PrintFlagsFinal -version | grep HeapSize
+# To increase the heap size, add the following flag to the java command below:
+#  -Xmx4g (this increases the max heap size to 4GB)
 echo "Running search engine..."
-(cd ./page1-search-engine && mvn clean install && java -jar ./target/page1-search-engine-1.0.jar)
+(cd ./page1-search-engine && mvn clean install && java -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath="." -jar ./target/page1-search-engine-1.0.jar)
 
 # Run trec_eval and save results to file.
 for file in ./page1-search-engine/results/*; do
