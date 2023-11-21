@@ -34,7 +34,7 @@ public class Indexer {
 
   public Indexer() throws IOException {
     this.allLuceneDocuments = new ArrayList<>();
-     // FBIS.
+    // FBIS.
     Fbis96Parser myFbisParser = new Fbis96Parser();
     myFbisParser.loadFiles();
     ArrayList<Fbis95Structure> fbisDocuments = myFbisParser.getMyFbisContainer();
@@ -63,7 +63,7 @@ public class Indexer {
       doc.add(new TextField(CONTENT, d.getText(), Field.Store.YES));
       this.allLuceneDocuments.add(doc);
     }
-    // // LA Times.
+    // LA Times.
     ArrayList<LosAngelesTimesDocument> laDocuments = LosAngelesTimesReader.readDocuments(LATIMES_PATH);
     for (LosAngelesTimesDocument d : laDocuments) {
       Document doc = new Document();
@@ -75,16 +75,15 @@ public class Indexer {
   }
 
   public void indexDocuments(String indexDirectory, Analyzer analyzer, Similarity scorer) throws IOException {
-    System.out.println("Indexing documents...");
-    IndexWriter indexWriter = createWriter(indexDirectory, analyzer, scorer);
-    indexWriter.forceMerge(100000);
-    indexWriter.addDocuments(this.allLuceneDocuments);
-    indexWriter.close();
-
     String analyzerName = analyzer.getClass().getName()
             .substring(analyzer.getClass().getName().lastIndexOf('.') + 1);
     String scorerName = scorer.getClass().getName()
             .substring(scorer.getClass().getName().lastIndexOf('.') + 1);
+    System.out.println("Indexing documents with " + analyzerName + " and " + scorerName + "...");
+    IndexWriter indexWriter = createWriter(indexDirectory, analyzer, scorer);
+    indexWriter.forceMerge(100000);
+    indexWriter.addDocuments(this.allLuceneDocuments);
+    indexWriter.close();
     System.out.println("Indexed documents with " + analyzerName + " and " + scorerName
     + " and stored to directory " + indexDirectory + ".");
   }

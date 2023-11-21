@@ -40,9 +40,8 @@ public class Querier {
    */
   public Querier(String pathToQueries) {
     // Read queries from topics.
-    QueryCreator myqueryGeneration = new QueryCreator();
-    myqueryGeneration.run();
-    this.queries = myqueryGeneration.getQueryList();
+    QueryCreator qc = new QueryCreator();
+    this.queries = qc.createQueries();
   }
 
   /**

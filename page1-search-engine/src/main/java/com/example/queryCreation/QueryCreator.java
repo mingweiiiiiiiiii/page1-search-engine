@@ -33,61 +33,51 @@ ProcessingFromTopicParser myProcess  = new ProcessingFromTopicParser()
 Online receive the input ArrayList<String> my = myProcess.getQueryList();
  */
 public class QueryCreator {
-	public ArrayList<String> getQueryList() {
-		return queryList;
-	}
-
-	private ArrayList<String> queryList;
+	private static final String STOPWORDS_PATH = "./data/queries/173Stopwords.txt";
+	private final List<Topic> topics;
 
 	public QueryCreator() {
-
-		this.run();
+		TopicParser tp = new TopicParser();
+		this.topics = tp.getTopics();
 	}
 
-	public String[] stringRemovalNoiseAndToken(String inputString) {
-		final String LARGE_STOPWORD_ADDRESS_173STOPWORDS = "./data/queries/173Stopwords.txt";
-
-		// Stopwords list
-		// https://gist.github.com/larsyencken/1440509
-		ArrayList<String> myStopWordList = new ArrayList<>();
-
-		try (BufferedReader reader = new BufferedReader(new FileReader(LARGE_STOPWORD_ADDRESS_173STOPWORDS))) {
+	// https://gist.github.com/larsyencken/1440509
+	public String[] stringRemovalNoiseAndToken(String text) {
+		// Read stopwords into ArrayList.
+		ArrayList<String> stopwords = new ArrayList<>();
+		try (BufferedReader reader = new BufferedReader(new FileReader(STOPWORDS_PATH))) {
 			String line;
-
-			// Read each line from the text file and add it to the ArrayList
 			while ((line = reader.readLine()) != null) {
-				myStopWordList.add(line);
+				stopwords.add(line);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		String[] wordsInput = inputString.split("\\s+");
-		StringBuilder builderForStopwordRemovaled = new StringBuilder();
-
-		for (String word : wordsInput) {
-			if (!myStopWordList.contains(word.toLowerCase())) {
-				builderForStopwordRemovaled.append(word);
-				builderForStopwordRemovaled.append(' ');
+		// Remove stopwords from text.
+		String[] words = text.split("\\s+");
+		StringBuilder wordsExcludingStopwords = new StringBuilder();
+		for (String word : words) {
+			if (!stopwords.contains(word.toLowerCase())) {
+				wordsExcludingStopwords.append(word);
+				wordsExcludingStopwords.append(' ');
 			}
 		}
-		// remove punctuation
-		String temp1String = builderForStopwordRemovaled.toString().trim();
-		// Remove punctuation
-		String[] tokenizedKeywordsPunction = temp1String.split("\\s+");
-		String[] processedKeywordsRemovalPunction = new String[tokenizedKeywordsPunction.length];
-		// remove the puncation in each string,but if period
-		// within string ,such as "U.S" maintain original
+
+		// Remove punctuation from text, but if there is a period within a string,
+		// e.g. "U.S", then the period is maintained.
 		// U.S and don't matain the original case
+		String[] tokenizedKeywordsPunction = wordsExcludingStopwords.toString().trim().split("\\s+");
+		String[] processedKeywordsRemovalPunction = new String[tokenizedKeywordsPunction.length];
 		for (int i = 0; i < tokenizedKeywordsPunction.length; i++) {
-			//<![a-zA-Z])\p{Punct} to make sure the puncation is not part of Abbreviation
-			//\p{Punct}(?![a-zA-Z]) remove the last puncation
+			//<![a-zA-Z])\p{Punct} to make sure the punctuation is not part of Abbreviation.
+			//\p{Punct}(?![a-zA-Z]) to remove the last punctuation.
 			processedKeywordsRemovalPunction[i] = tokenizedKeywordsPunction[i].replaceAll("(?<![a-zA-Z])\\p{Punct}|\\p{Punct}(?![a-zA-Z])", "");
 		}
-		// remove non-sense words before fedding into TF-IDF
-		List<String> filteredRelevantkeywords = new ArrayList<>();
 
-		String []removelist ={"relevant","i.e",
+		// Remove other words considered irrelevant by observation.
+		List<String> filteredRelevantkeywords = new ArrayList<>();
+		String[] removelist ={"relevant","i.e",
 				"must","also","contain","am","is","will","due","as","it"
 				,"taken","takes","done","even","may","either","claims",
 				"itself","e.g","used"};
@@ -103,83 +93,53 @@ public class QueryCreator {
 					judgeForAdd = false;
 				}
 			}
-			if(judgeForAdd == false)
-			{
-				// pass
-			}
-			else{
+			if(judgeForAdd) {
 				filteredRelevantkeywords.add(keyword);
 			}
 
 		}
-		//
 		String[] removeRelevantList =  filteredRelevantkeywords.toArray(new String[0]);
 
 		// remove digit number such as 103 ; as these are not keywords
 		List<String> filteredNumericList = new ArrayList<>();
 		for (String keyword : removeRelevantList) {
-
 			if (!keyword.matches("\\d+")) {
-
-				// to lowercase
 				filteredNumericList.add(keyword.toLowerCase());
 			}
 		}
 		String[] finalStringArrayTemp =  filteredNumericList.toArray(new String[0]);
 		// for each string if contain "/",such as "damage/casualties" into two string into a arraylist
 		ArrayList<String> splitKeywordsByAntiSlash = new ArrayList<>();
-
-		// Iterate over the array of tokenized keywords
 		for (String keyword : finalStringArrayTemp) {
-
 			if (keyword.contains("/")) {
-
 				String[] parts = keyword.split("/");
-
 				splitKeywordsByAntiSlash.addAll(Arrays.asList(parts));
 			} else {
-
 				splitKeywordsByAntiSlash.add(keyword);
 			}
 		}
 
-		// Change UV to ultraviolet
-		// Operaiion for UV
-		// for query 27
-		ArrayList<String>finalList =  new ArrayList<>();
-		for(int indexIndexJ = 0 ;indexIndexJ<splitKeywordsByAntiSlash.size();indexIndexJ++)
-		{
-			String currentWords = splitKeywordsByAntiSlash.get(indexIndexJ);
-			if(currentWords.equalsIgnoreCase("UV"))
-			{
+		// Change UV to ultraviolet for query 27.
+		ArrayList<String> finalList = new ArrayList<>();
+		for(int i = 0; i < splitKeywordsByAntiSlash.size(); i++) {
+			String currentWords = splitKeywordsByAntiSlash.get(i);
+			if(currentWords.equalsIgnoreCase("UV")) {
 				finalList.add("ultraviolet");
-			}
-			else{
+			} else {
 				finalList.add(currentWords);
 			}
-
 		}
-
-
 		return finalList.toArray(new String[0]);
-
 	}
 
 
-	public void run() {
-		TopicParser my = new TopicParser();
-
-		List<Topic> local = my.getTopics();
-		ArrayList<String> OutputList = new ArrayList<>();
-		for (int indexQuery = 0; indexQuery < local.size(); indexQuery++) {
-			Topic temp = local.get(indexQuery);
-			String title = temp.getTitle();
-			String nattive = temp.getNarrative();
-			String desc = temp.getDescription();
-			// Merge the string from title ,narrative and description to
+	public ArrayList<String> createQueries() {
+		ArrayList<String> queries = new ArrayList<>();
+		for (Topic topic : this.topics) {
+			// Merge the string from title, narrative and description to
 			// form a full document
 			// in order to perform TF-IDF score
-			String finalString = title + nattive + desc;
+			String finalString = topic.getTitle() + topic.getNarrative() + topic.getDescription();
 
 			String[] tokenizedKeywords = stringRemovalNoiseAndToken(finalString);
 			List<String> tokenizedKeywordsList = Arrays.asList(tokenizedKeywords);
@@ -250,16 +210,14 @@ public class QueryCreator {
 			}
 			String finalStringCurrent = currentKeywordsBulder.toString();
 
-			OutputList.add(finalStringCurrent.trim());
+			queries.add(finalStringCurrent.trim());
 
 
 
 		}
-		this.queryList= new ArrayList<>(OutputList);
-
 		String filePath = "./data/queries/queries.txt";
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-			for (String line : OutputList) {
+			for (String line : queries) {
 				writer.write(line);
 				writer.newLine();
 			}
@@ -268,5 +226,6 @@ public class QueryCreator {
 			e.printStackTrace();
 		}
 
+		return queries;
 	}
 }

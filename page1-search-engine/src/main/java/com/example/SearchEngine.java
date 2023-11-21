@@ -1,10 +1,12 @@
 package com.example;
 
-import java.io.File;
-
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.SimpleAnalyzer;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
 
 /**
@@ -12,30 +14,33 @@ import org.apache.lucene.search.similarities.Similarity;
  */
 public class SearchEngine {
   private static final String INDEX_DIRECTORY = "./index";
+
+  // Analyzers to use.
+  private static final Analyzer[] analyzers = {
+    new StandardAnalyzer(), // splits tokens at punctuation, whitespace and lowercases.
+    new WhitespaceAnalyzer(), // splits tokens at whitespace.
+    new EnglishAnalyzer(), // splits tokens punctuation, whitespace, lowercases 
+    // and removes English stop words.
+    new SimpleAnalyzer(), // splits tokens at non-alphanumeric characters and lowercases.
+  };
+
+   // Scorers to use.  
+  private static final Similarity[] scorers = {
+    new ClassicSimilarity(),
+    new BM25Similarity(),
+  };
   /**
    * Main method for SearchEngine.
    */
   public static void main(String[] args) throws Exception {
-    Analyzer analyzer = new StandardAnalyzer();
-    Similarity scorer = new BM25Similarity();
     Indexer indexer = new Indexer();
-    indexer.indexDocuments(INDEX_DIRECTORY, analyzer, scorer);
-
-    // DELETE write lock file.
-    String fileName = "write.lock";
-    File lockFile = new File(INDEX_DIRECTORY, fileName);
-    if (lockFile.exists()) {
-      boolean isDeleted = lockFile.delete();
-      if (isDeleted) {
-        System.out.println(fileName + " has been successfully deleted.");
-      } else {
-        System.out.println("Could not delete " + fileName + ". Please check file permissions.");
+     // Use all analyzer-scorer combinations.
+    for (Analyzer analyzer : analyzers) {
+      for (Similarity scorer : scorers) {
+        indexer.indexDocuments(INDEX_DIRECTORY, analyzer, scorer);
+        Querier querier = new Querier("./data/topics/topics.txt");
+        querier.queryIndex(INDEX_DIRECTORY, analyzer, scorer);
       }
-    } else {
-      System.out.println(fileName + " does not exist in the directory " + INDEX_DIRECTORY);
     }
-
-    Querier querier = new Querier("./topics/topics.txt");
-    querier.queryIndex(INDEX_DIRECTORY, analyzer, scorer);
   }
 }
