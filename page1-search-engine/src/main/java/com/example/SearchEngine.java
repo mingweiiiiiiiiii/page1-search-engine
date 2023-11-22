@@ -8,7 +8,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
-
+import com.example.CustomisedAnalyzer.CustomAnalyzer_Syn_stp;
 /**
  * SearchEngine indexes and searches documents.
  */
@@ -22,6 +22,7 @@ public class SearchEngine {
     new EnglishAnalyzer(), // splits tokens punctuation, whitespace, lowercases 
     // and removes English stop words.
     new SimpleAnalyzer(), // splits tokens at non-alphanumeric characters and lowercases.
+    new  CustomAnalyzer_Syn_stp(),
   };
 
    // Scorers to use.  
