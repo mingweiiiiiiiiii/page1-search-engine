@@ -39,9 +39,7 @@ public class Querier {
   private final ArrayList<String> queries;
 
   private static IndexReader myDirectorReader;
-  private final String DOC_NO = "docno";
-  private final String TITLE = "title";
-  private final String CONTENT = "content";
+
 
 
   /*
