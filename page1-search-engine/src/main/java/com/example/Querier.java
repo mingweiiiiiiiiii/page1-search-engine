@@ -11,10 +11,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.queries.mlt.MoreLikeThisQuery;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -33,6 +37,36 @@ public class Querier {
   private static final String CONTENT  = "content";
 
   private final ArrayList<String> queries;
+
+  private static IndexReader myDirectorReader;
+
+
+
+  /*
+   * Code from this link:
+   * https://github.com/taaanmay/CS7IS3-Assignment-2/blob/main/src/main/java/app/
+   * QueryResolverWithExp.java
+   */
+  private static Query expandQuery(IndexSearcher searcher, Analyzer analyzer, Query queryContents, ScoreDoc[] hits,
+                                   IndexReader reader) throws Exception {
+    BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
+    queryBuilder.add(queryContents, BooleanClause.Occur.SHOULD);
+    TopDocs topDocs = searcher.search(queryContents, 4);
+
+    for (ScoreDoc score : topDocs.scoreDocs) {
+      Document hitDoc = reader.document(score.doc);
+      String fieldText = hitDoc.getField("content").stringValue();
+      String[] moreLikeThisField = {"content"};
+      MoreLikeThisQuery
+          expandedQueryMoreLikeThis = new MoreLikeThisQuery(fieldText, moreLikeThisField, analyzer,
+          "content");
+      Query expandedQuery = expandedQueryMoreLikeThis.rewrite(reader);
+      queryBuilder.add(expandedQuery, BooleanClause.Occur.SHOULD);
+    }
+    return queryBuilder.build();
+  }
+
+
 
   /**
    * Constructor for Querier.
@@ -67,14 +101,18 @@ public class Querier {
     int queryID = 401;
     for (String q : queries) {
       q = q.trim();
-      TopDocs results = search(q, searcher, analyzer);
+
+      // Adding query expansion here :proximity search
+      ScoreDoc [] results = scoreDocumentsearch(q, searcher, analyzer);
       String queryResults = "";
       int rank = 1;
-      for (ScoreDoc sd : results.scoreDocs) {
+
+      for (int j = 0; j < results.length; j++) {
+        ScoreDoc sd = results[j];
         // Output in trec_eval format - see http://www.rafaelglater.com/en/post/learn-how-to-use-trec_eval-to-evaluate-your-information-retrieval-system.
         // Format: query-id Q0 document-id rank score STANDARD
-        queryResults += queryID + " Q0 " + (searcher.doc(sd.doc).get(DOC_NO)) + " " 
-          + rank + " " + sd.score + " " + analyzerName + "-" + scorerName + "\n";
+        queryResults += queryID + " Q0 " + (searcher.doc(sd.doc).get(DOC_NO)) + " "
+            + rank + " " + sd.score + " " + analyzerName + "-" + scorerName + "\n";
         rank++;
       }
       bw.write(queryResults);
@@ -93,6 +131,7 @@ public class Querier {
     // Use file system directory to retrieve index.
     Directory dir = FSDirectory.open(Paths.get(indexDirectory));
     IndexReader reader = DirectoryReader.open(dir);
+    myDirectorReader = reader;
     IndexSearcher searcher = new IndexSearcher(reader);
     // Configure index searcher with scorer.
     searcher.setSimilarity(scorer);
@@ -119,8 +158,8 @@ public class Querier {
    * @param analyzer Analyzer to use for searching.
    * @throws Exception exception.
    */
-  private static TopDocs search(String term, IndexSearcher searcher, 
-      Analyzer analyzer) throws Exception {
+  private static ScoreDoc[] scoreDocumentsearch(String term, IndexSearcher searcher,
+                                                Analyzer analyzer) throws Exception {
     // Use specified analyzer to parse query.
     QueryParser qp = createQueryParser(analyzer);
     qp.setAllowLeadingWildcard(true);
@@ -129,7 +168,19 @@ public class Querier {
     String queryTerm = "title:" + term + " OR content:" + term;
     // Search index for top results for query.
     Query query = qp.parse(queryTerm);
-    TopDocs topDocs = searcher.search(query, TOP_DOCS_LIMIT);
-    return topDocs;
+
+        /*
+      Query expansion here
+       */
+    Query myqry = qp.parse(term);
+    ScoreDoc [] myScoreDocs = {};
+    Query expandedQuery = expandQuery(searcher, analyzer, myqry, myScoreDocs, myDirectorReader);
+
+    myScoreDocs = searcher.search(expandedQuery, TOP_DOCS_LIMIT).scoreDocs;
+
+
+
+
+    return myScoreDocs;
   }
 }
