@@ -9,6 +9,8 @@ import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
 import com.example.CustomisedAnalyzer.CustomAnalyzer_Syn_stp;
+import org.apache.lucene.search.similarities.LMDirichletSimilarity;
+import org.apache.lucene.search.similarities.LMJelinekMercerSimilarity;
 /**
  * SearchEngine indexes and searches documents.
  */
@@ -29,6 +31,8 @@ public class SearchEngine {
   private static final Similarity[] scorers = {
     new ClassicSimilarity(),
     new BM25Similarity(),
+    new LMDirichletSimilarity(),
+    new LMJelinekMercerSimilarity(0.7f),
   };
   /**
    * Main method for SearchEngine.
