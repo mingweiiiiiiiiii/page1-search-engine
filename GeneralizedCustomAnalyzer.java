@@ -1,4 +1,4 @@
-package ie.tcd.cs7is3;
+package com.example;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
