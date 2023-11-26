@@ -37,10 +37,16 @@ public class Querier {
   private static final String CONTENT  = "content";
 
   private final ArrayList<String> queries;
+  private static int multiSimilarityCount;
 
   private static IndexReader myDirectorReader;
 
-
+  // MultiSimilarity scorers string representation.
+  private static final String[] MULTI_SIMILARITY_SCORERS = {
+    "ClassicSimilarity+BM25Similarity",
+    "ClassicSimilarity+LMDirichletSimilarity",
+    "BM25Similarity+LMDirichletSimilarity"
+  };
 
   /*
    * Code from this link:
@@ -91,6 +97,10 @@ public class Querier {
             .substring(analyzer.getClass().getName().lastIndexOf('.') + 1);
     String scorerName = scorer.getClass().getName()
             .substring(scorer.getClass().getName().lastIndexOf('.') + 1);
+    if (scorerName.equals("MultiSimilarity")) {
+      scorerName = MULTI_SIMILARITY_SCORERS[multiSimilarityCount];
+      multiSimilarityCount++;
+    }
     File fout = new File("./results/" + analyzerName + "-" + scorerName);
     FileOutputStream fos = new FileOutputStream(fout);
     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));

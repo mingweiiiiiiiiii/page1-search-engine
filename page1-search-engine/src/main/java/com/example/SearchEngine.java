@@ -11,6 +11,7 @@ import org.apache.lucene.search.similarities.Similarity;
 import com.example.CustomisedAnalyzer.CustomAnalyzer_Syn_stp;
 import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.search.similarities.LMJelinekMercerSimilarity;
+import org.apache.lucene.search.similarities.MultiSimilarity;
 /**
  * SearchEngine indexes and searches documents.
  */
@@ -18,7 +19,7 @@ public class SearchEngine {
   private static final String INDEX_DIRECTORY = "./index";
 
   // Analyzers to use.
-  private static final Analyzer[] analyzers = {
+  private static final Analyzer[] ANALYZERS = {
     new GeneralizedCustomAnalyzer(),
     new StandardAnalyzer(), // splits tokens at punctuation, whitespace and lowercases.
     new WhitespaceAnalyzer(), // splits tokens at whitespace.
@@ -29,11 +30,14 @@ public class SearchEngine {
   };
 
    // Scorers to use.  
-  private static final Similarity[] scorers = {
+  private static final Similarity[] SCORERS = {
     new ClassicSimilarity(),
     new BM25Similarity(),
     new LMDirichletSimilarity(),
     new LMJelinekMercerSimilarity(0.7f),
+    new MultiSimilarity(new Similarity[]{new ClassicSimilarity(), new BM25Similarity()}),
+    new MultiSimilarity(new Similarity[]{new ClassicSimilarity(), new LMDirichletSimilarity()}),
+    new MultiSimilarity(new Similarity[]{new BM25Similarity(), new LMDirichletSimilarity()})
   };
   /**
    * Main method for SearchEngine.
@@ -41,8 +45,8 @@ public class SearchEngine {
   public static void main(String[] args) throws Exception {
     Indexer indexer = new Indexer();
      // Use all analyzer-scorer combinations.
-    for (Analyzer analyzer : analyzers) {
-      for (Similarity scorer : scorers) {
+    for (Analyzer analyzer : ANALYZERS) {
+      for (Similarity scorer : SCORERS) {
         indexer.indexDocuments(INDEX_DIRECTORY, analyzer, scorer);
         Querier querier = new Querier("./data/topics/topics.txt");
         querier.queryIndex(INDEX_DIRECTORY, analyzer, scorer);
