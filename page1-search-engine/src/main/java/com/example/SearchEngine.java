@@ -19,6 +19,7 @@ public class SearchEngine {
 
   // Analyzers to use.
   private static final Analyzer[] analyzers = {
+    new GeneralizedCustomAnalyzer(),
     new StandardAnalyzer(), // splits tokens at punctuation, whitespace and lowercases.
     new WhitespaceAnalyzer(), // splits tokens at whitespace.
     new EnglishAnalyzer(), // splits tokens punctuation, whitespace, lowercases 
