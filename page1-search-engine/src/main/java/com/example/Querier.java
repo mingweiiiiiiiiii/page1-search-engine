@@ -37,7 +37,7 @@ public class Querier {
   private static final String CONTENT  = "content";
 
   private final ArrayList<String> queries;
-  private int multiSimilarityCount;
+  private static int multiSimilarityCount;
 
   private static IndexReader myDirectorReader;
 
