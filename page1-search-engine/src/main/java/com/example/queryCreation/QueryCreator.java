@@ -118,27 +118,17 @@ public class QueryCreator {
 				splitKeywordsByAntiSlash.add(keyword);
 			}
 		}
-	/*
- 		Based on Brain's suggestion ,in the corpora there are no words like "ultraviolet"
-   		Instead it use its' original acronym. Hence I decide to comment this code out.
- 	*/	
+
 		// Change UV to ultraviolet for query 27.
-		
 		ArrayList<String> finalList = new ArrayList<>();
 		for(int i = 0; i < splitKeywordsByAntiSlash.size(); i++) {
 			String currentWords = splitKeywordsByAntiSlash.get(i);
-			finalList.add(currentWords);
-			// Comment out the filter
-			/*
 			if(currentWords.equalsIgnoreCase("UV")) {
 				finalList.add("ultraviolet");
 			} else {
 				finalList.add(currentWords);
 			}
-   			*/
 		}
-  		
-		
 		return finalList.toArray(new String[0]);
 	}
 
