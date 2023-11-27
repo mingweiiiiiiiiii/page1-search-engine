@@ -19,35 +19,35 @@ public class SearchEngine {
   private static final String INDEX_DIRECTORY = "./index";
 
   // Analyzers to use.
-  private static final Analyzer[] ANALYZERS = {
-    new GeneralizedCustomAnalyzer(),
-    new StandardAnalyzer(), // splits tokens at punctuation, whitespace and lowercases.
-    new WhitespaceAnalyzer(), // splits tokens at whitespace.
-    new EnglishAnalyzer(), // splits tokens punctuation, whitespace, lowercases 
-    // and removes English stop words.
-    new SimpleAnalyzer(), // splits tokens at non-alphanumeric characters and lowercases.
-    new  CustomAnalyzer_Syn_stp(),
+  private static final Analyzer[] analyzers = {
+          new GeneralizedCustomAnalyzer(),
+          new StandardAnalyzer(), // splits tokens at punctuation, whitespace and lowercases.
+          new WhitespaceAnalyzer(), // splits tokens at whitespace.
+          new EnglishAnalyzer(), // splits tokens punctuation, whitespace, lowercases
+          // and removes English stop words.
+          new SimpleAnalyzer(), // splits tokens at non-alphanumeric characters and lowercases.
+          new  CustomAnalyzer_Syn_stp(),
   };
 
-   // Scorers to use.  
-  private static final Similarity[] SCORERS = {
-    new ClassicSimilarity(),
-    new BM25Similarity(),
-    new LMDirichletSimilarity(),
-    new LMJelinekMercerSimilarity(0.7f),
-    new MultiSimilarity(new Similarity[]{new ClassicSimilarity(), new BM25Similarity()}),
-    new MultiSimilarity(new Similarity[]{new ClassicSimilarity(), new LMDirichletSimilarity()}),
-    new MultiSimilarity(new Similarity[]{new BM25Similarity(), new LMDirichletSimilarity()})
+  // Scorers to use.
+  private static final Similarity[] scorers = {
+          new ClassicSimilarity(),
+          new BM25Similarity(),
+          new LMDirichletSimilarity(),
+          new LMJelinekMercerSimilarity(0.7f),
+          new MultiSimilarity(new Similarity[]{new ClassicSimilarity(), new BM25Similarity()}),
+          new MultiSimilarity(new Similarity[]{new ClassicSimilarity(), new LMDirichletSimilarity()}),
+          new MultiSimilarity(new Similarity[]{new BM25Similarity(), new LMDirichletSimilarity()})
   };
   /**
    * Main method for SearchEngine.
    */
   public static void main(String[] args) throws Exception {
     Indexer indexer = new Indexer();
-     // Use all analyzer-scorer combinations.
-    for (Analyzer analyzer : ANALYZERS) {
-      for (Similarity scorer : SCORERS) {
-        indexer.indexDocuments(INDEX_DIRECTORY, analyzer, scorer);
+    // Use all analyzer-scorer combinations.
+    for (Analyzer analyzer : analyzers) {
+      for (Similarity scorer : scorers) {
+        indexer.indexAllDocuments(INDEX_DIRECTORY, analyzer, scorer);
         Querier querier = new Querier("./data/topics/topics.txt");
         querier.queryIndex(INDEX_DIRECTORY, analyzer, scorer);
       }
