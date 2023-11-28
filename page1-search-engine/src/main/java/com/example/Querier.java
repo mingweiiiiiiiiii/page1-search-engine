@@ -100,6 +100,9 @@ public class Querier {
     if (scorerName.equals("MultiSimilarity")) {
       scorerName = MULTI_SIMILARITY_SCORERS[multiSimilarityCount];
       multiSimilarityCount++;
+      if (multiSimilarityCount == MULTI_SIMILARITY_SCORERS.length) {
+        multiSimilarityCount = 0;
+      }
     }
     File fout = new File("./results/" + analyzerName + "-" + scorerName);
     FileOutputStream fos = new FileOutputStream(fout);
