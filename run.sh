@@ -8,7 +8,7 @@
 # To increase the heap size, add the following flag to the java command below:
 #  -Xmx4g (this increases the max heap size to 4GB)
 echo "Running search engine..."
-(cd ./page1-search-engine && mvn clean install && java -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath="." -jar ./target/page1-search-engine-1.0.jar)
+(cd ./page1-search-engine && mvn clean install && java -Xmx4g -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath="." -jar ./target/page1-search-engine-1.0.jar)
 
 # Run trec_eval and save results to file.
 for file in ./page1-search-engine/results/*; do
