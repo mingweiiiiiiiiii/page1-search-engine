@@ -20,24 +20,24 @@ public class SearchEngine {
 
   // Analyzers to use.
   private static final Analyzer[] analyzers = {
-          new GeneralizedCustomAnalyzer(),
-          new StandardAnalyzer(), // splits tokens at punctuation, whitespace and lowercases.
-          new WhitespaceAnalyzer(), // splits tokens at whitespace.
-          new EnglishAnalyzer(), // splits tokens punctuation, whitespace, lowercases
-          // and removes English stop words.
-          new SimpleAnalyzer(), // splits tokens at non-alphanumeric characters and lowercases.
+          // new GeneralizedCustomAnalyzer(),
+          // new StandardAnalyzer(), // splits tokens at punctuation, whitespace and lowercases.
+          // new WhitespaceAnalyzer(), // splits tokens at whitespace.
+          // new EnglishAnalyzer(), // splits tokens punctuation, whitespace, lowercases
+          // // and removes English stop words.
+          // new SimpleAnalyzer(), // splits tokens at non-alphanumeric characters and lowercases.
           new  CustomAnalyzer_Syn_stp(),
   };
 
   // Scorers to use.
   private static final Similarity[] scorers = {
-          new ClassicSimilarity(),
+          // new ClassicSimilarity(),
           new BM25Similarity(),
-          new LMDirichletSimilarity(),
-          new LMJelinekMercerSimilarity(0.7f),
-          new MultiSimilarity(new Similarity[]{new ClassicSimilarity(), new BM25Similarity()}),
-          new MultiSimilarity(new Similarity[]{new ClassicSimilarity(), new LMDirichletSimilarity()}),
-          new MultiSimilarity(new Similarity[]{new BM25Similarity(), new LMDirichletSimilarity()})
+          // new LMDirichletSimilarity(),
+          // new LMJelinekMercerSimilarity(0.7f),
+          // new MultiSimilarity(new Similarity[]{new ClassicSimilarity(), new BM25Similarity()}),
+          // new MultiSimilarity(new Similarity[]{new ClassicSimilarity(), new LMDirichletSimilarity()}),
+          // new MultiSimilarity(new Similarity[]{new BM25Similarity(), new LMDirichletSimilarity()})
   };
   /**
    * Main method for SearchEngine.
