@@ -1,6 +1,10 @@
 # Page1 Search Engine
 This group project aims to acheive the best search engine performance for a collection of news articles from various sources.
 
+## Original Repo:
+
+  https://github.com/briantwhelan/page1-search-engine
+  
 ## Overview
 
 [Apache Lucene](https://lucene.apache.org/) is an open-source search engine library which provides methods for indexing and querying collections of documents.
